@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>2024 신년계획 버킷리스트</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <style>
+    .bg {
+      position: relative;
+      background-image: url("./SakuraBG2.png");
+      background-size: cover;
+      background-repeat: no-repeat;
+      margin: 0 auto;
+      background-color: #141617;
+    }
+
+    .sakura {
+      text-align: center;
+    }
+
+    .title {
+      margin-top: 50px;
+      color: #E8344E;
+    }
+
+    .msg {
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 160px;
+    }
+
+    .bucket {
+      width: 160px;
+      height: 160px;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      margin: 10px;
+      position: relative;
+      /* Add position relative to handle absolute positioning */
+    }
+
+    .img1 {
+      background-image: url("./Bucket01.png");
+      color: white;
+    }
+
+    .img2 {
+      background-image: url("./Bucket02.png");
+      color: #E8344E;
+    }
+
+    .img3 {
+      background-image: url("./Bucket03.png");
+      color: #E8344E;
+    }
+
+    .img4 {
+      background-image: url("./Bucket04.png");
+      color: white;
+    }
+
+    .img5 {
+      background-image: url("./Bucket05.png");
+      color: white;
+    }
+
+    .img6 {
+      background-image: url("./Bucket06.png");
+      color: #E8344E;
+    }
+
+    .bucket-plus {
+      width: 30px;
+      height: 30px;
+      background-image: url("./Bucket_Plus.png");
+      background-size: cover;
+      background-position: center;
+      cursor: pointer;
+    }
+
+    .bucket-plus:hover {
+      opacity: 0.8;
+    }
+
+    .delete-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 20px;
+      height: 20px;
+      background-image: url("./Delete.png");
+      background-size: cover;
+      cursor: pointer;
+    }
+
+    .input-container {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-container input {
+      padding: 8px;
+      margin-right: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      flex: 1;
+    }
+
+    .input-container button {
+      padding: 8px 16px;
+      background-color: #E8344E;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .input-container button:hover {
+      background-color: #d61d3b;
+    }
+
+    /* Flexbox to display in 3 columns */
+    #bucketContainer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* Style for the audio control button */
+    #audioControl {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background-color: transparent;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      z-index: 999;
+      color: white;
+      font-size: 20px;
+    }
+  </style>
+</head>
+
+<body class="bg center">
+  <button id="audioControl" onclick="toggleAudio()">
+    <span id="audioStatus">음악 끄기</span>
+  </button>
+  <div class="sakura">
+    <h1 class="title">SPARTHON Bucket List</h1>
+    <p class="msg">꿈은 꾸는 것이 아닌, 이루는 것이다.</p>
+    <div class="input-container">
+      <input type="text" id="newBucketInput" placeholder="내용을 입력하세요.">
+      <button class="bucket-plus" onclick="addBucket()"></button>
+    </div>
+    <div id="bucketContainer">
+      <div class="bucket img1 center">
+        나만의 앱 만들기
+        <div class="delete-btn" onclick="deleteBucket(this.parentNode)"></div>
+      </div>
+      <div class="bucket img2 center">
+        근육량 증가
+        <div class="delete-btn" onclick="deleteBucket(this.parentNode)"></div>
+      </div>
+      <div class="bucket img3 center">
+        포트폴리오 만들기
+        <div class="delete-btn" onclick="deleteBucket(this.parentNode)"></div>
+      </div>
+      <div class="bucket img4 center">
+        하이브리드 차량으로 교체
+        <div class="delete-btn" onclick="deleteBucket(this.parentNode)"></div>
+      </div>
+      <div class="bucket img5 center">
+        오픽 IH 등급 달성하기
+        <div class="delete-btn" onclick="deleteBucket(this.parentNode)"></div>
+      </div>
+      <div class="bucket img6 center">
+        내가 만든 앱 자랑하기
+        <div class="delete-btn" onclick="deleteBucket(this.parentNode)"></div>
+      </div>
+    </div>
+  </div>
+  <audio id="bgm" autoplay loop>
+    <source src="./bgm.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+  <script>
+    // Function to toggle audio play/pause
+    function toggleAudio() {
+      const bgm = document.getElementById("bgm");
+      const audioStatus = document.getElementById("audioStatus");
+      if (bgm.paused) {
+        bgm.play();
+        audioStatus.textContent = "음악 끄기";
+      } else {
+        bgm.pause();
+        audioStatus.textContent = "음악 켜기";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const buckets = document.querySelectorAll(".bucket");
+      buckets.forEach((bucket, index) => {
+        const isDone = localStorage.getItem("bucket" + index) === "done";
+        if (isDone) {
+          bucket.classList.add("done");
+        }
+        bucket.addEventListener("click", () => clickBucket(index));
+      });
+    });
+
+    function clickBucket(index) {
+      const bucket = document.querySelectorAll(".bucket")[index];
+      bucket.classList.toggle("done");
+      const isDone = bucket.classList.contains("done");
+      localStorage.setItem("bucket" + index, isDone ? "done" : "");
+      alert(isDone ? '달성을 축하합니다!' : '다시 달성하세요!');
+    }
+
+    function deleteBucket(bucket) {
+      bucket.remove();
+    }
+
+    // 리스트 추가 함수
+    function addBucket() {
+      const bucketContainer = document.getElementById("bucketContainer");
+      const newBucketInput = document.getElementById("newBucketInput");
+      const newBucketValue = newBucketInput.value.trim();
+      if (newBucketValue) {
+        const bucketIndex = document.querySelectorAll(".bucket").length + 1;
+        const newBucket = document.createElement("div");
+        // 배경 이미지를 순환하여 추가
+        const imgIndex = bucketIndex % 6 === 0 ? 6 : bucketIndex % 6;
+        newBucket.className = "bucket img" + imgIndex + " center";
+        newBucket.innerText = newBucketValue;
+        newBucket.addEventListener("click", () => clickBucket(bucketIndex - 1));
+        const deleteBtn = document.createElement("div");
+        deleteBtn.className = "delete-btn";
+        deleteBtn.onclick = () => deleteBucket(newBucket);
+        newBucket.appendChild(deleteBtn);
+        bucketContainer.appendChild(newBucket);
+        newBucketInput.value = "";
+      }
+    }
+  </script>
+</body>
+
+</html>
